@@ -1,10 +1,7 @@
 import copy
 import os
 import time
-import torch
 import argparse
-from torchvision import datasets
-from torchvision.transforms import transforms
 
 import config
 import datetime
