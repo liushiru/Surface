@@ -118,6 +118,6 @@ if __name__ == "__main__":
     model = Net().to(args.device)
 
     criterion = torch.nn.MSELoss(reduction='sum')
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-4)
+    optimizer = torch.optim.SGD(model.parameters(), lr=config.learning_rate)
 
     train_model(model, dataloaders, criterion, optimizer, tb_writer)
