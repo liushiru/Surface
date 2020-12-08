@@ -78,6 +78,7 @@ def train_model(model, dataloaders, criterion, optimizer, tb_writer):
                 val_loss_history.append(epoch_loss)
 
             tb_writer.add_scalar('Loss/' + phase, epoch_loss, epoch)
+            print('Best val Loss: {:4f}'.format(best_loss))
 
         print()
 
