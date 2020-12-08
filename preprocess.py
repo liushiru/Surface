@@ -1,5 +1,6 @@
 import os
 import cv2
+from PIL import Image
 import torch
 import numpy as np
 import pandas as pd
@@ -13,6 +14,7 @@ import config as config
 class SurfaceDataset(Dataset):
 
     default_tranform = transforms.Compose([
+                transforms.Resize(256),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
@@ -42,7 +44,8 @@ class SurfaceDataset(Dataset):
 
         img_name = os.path.join(self.root_dir,
                                 self.dataframe.iloc[idx, 0])
-        image = cv2.imread(img_name).astype('float32')
+        # image = cv2.imread(img_name).astype('float32')
+        image = Image.open(img_name)
         direction = self.dataframe.iloc[idx, 1:].to_numpy()
         direction = direction.astype('float32')
         sample = {'image': image, 'direction': direction}

@@ -27,13 +27,13 @@ def train_val_split(dataset):
 def train_model(model, dataloaders, criterion, optimizer, tb_writer):
     since = time.time()
 
-    val_acc_history = []
+    val_loss_history = []
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = float('inf')
 
-    for epoch in range(config.epochs):
-        print('Epoch {}/{}'.format(epoch, config.epochs - 1))
+    for epoch in range(1, config.epochs + 1):
+        print('Epoch {}/{}'.format(epoch, config.epochs))
         print('-' * 10)
 
         # Each epoch has a training and validation phase
@@ -78,7 +78,7 @@ def train_model(model, dataloaders, criterion, optimizer, tb_writer):
                 best_loss = epoch_loss
                 best_model_wts = copy.deepcopy(model.state_dict())
             if phase == 'val':
-                val_acc_history.append(epoch_loss)
+                val_loss_history.append(epoch_loss)
 
             tb_writer.add_scalar('Loss/' + phase, epoch_loss, epoch)
 
@@ -90,7 +90,7 @@ def train_model(model, dataloaders, criterion, optimizer, tb_writer):
 
     # load best model weights
     model.load_state_dict(best_model_wts)
-    return model, val_acc_history
+    return model, val_loss_history
 
 
 if __name__ == "__main__":
@@ -114,9 +114,9 @@ if __name__ == "__main__":
 
     dataloaders = {}
     dataloaders['train'] = DataLoader(train_set, batch_size=4,
-                            shuffle=True, num_workers=0)
+                            shuffle=True, num_workers=4)
     dataloaders['val'] = DataLoader(val_set, batch_size=4,
-                            shuffle=True, num_workers=0)
+                            shuffle=True, num_workers=4)
 
     model = Net().to(args.device)
 
