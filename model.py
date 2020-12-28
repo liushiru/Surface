@@ -19,8 +19,12 @@ class Net(nn.Module):
         super(Net, self).__init__()
 
         self.resnet_model = torch.hub.load('pytorch/vision:v0.6.0', 'resnet18', pretrained=True)
+
+        # for units in range(800, 100, -100):
+
         self.fc1 = nn.Linear(1000, 100)
-        self.fc2 = nn.Linear(100, 3)
+
+        self.fc2 = nn.Linear(100, 100)
 
 
     def forward(self, x):
