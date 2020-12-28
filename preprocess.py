@@ -7,6 +7,7 @@ import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
+from sklearn.preprocessing import StandardScaler
 import config as config
 
 
@@ -32,6 +33,7 @@ class SurfaceDataset(Dataset):
         self.transform = transform
         if transform is None:
             self.transform = self.default_tranform
+        self.scalar = StandardScaler()
 
     def __len__(self):
         return len(self.dataframe)
@@ -52,6 +54,16 @@ class SurfaceDataset(Dataset):
             sample['image'] = self.transform(sample['image'])
 
         return sample
+
+    def set_scalar(self, train_set):
+        train_data = self.dataframe.iloc[train_set.indices, 1:]
+        data = train_data.to_numpy()
+        self.scalar.fit(data)
+
+    def normalize_data(self):
+        scaled_data = self.scalar.transform(self.dataframe.iloc[:, 1:])
+        for col in range(config.output_size):
+            self.dataframe.iloc[:, col+1] = scaled_data[:, col]
 
 
 

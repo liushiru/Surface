@@ -17,7 +17,9 @@ from model import Net
 def train_val_split(dataset):
     train_len = int(len(dataset) * (1 - config.val_split))
     val_len = int(len(dataset) * config.val_split)
-    train_set, val_set = torch.utils.data.random_split(dataset, [train_len, val_len])
+    train_set, val_set = torch.utils.data.random_split(dataset,
+                                                       [train_len, val_len],
+                                                       generator=torch.Generator().manual_seed(config.val_split_seed))
     return train_set, val_set
 
 
@@ -110,11 +112,16 @@ if __name__ == "__main__":
 
     train_set, val_set = train_val_split(dataset)
 
+    before = dataset.dataframe.copy()
+    dataset.set_scalar(train_set)
+    dataset.normalize_data()
+    after = dataset.dataframe
+
     dataloaders = {}
-    dataloaders['train'] = DataLoader(train_set, batch_size=4,
-                            shuffle=True, num_workers=4)
-    dataloaders['val'] = DataLoader(val_set, batch_size=4,
-                            shuffle=True, num_workers=4)
+    dataloaders['train'] = DataLoader(train_set, batch_size=config.batch_size,
+                            shuffle=True, num_workers=config.num_workers)
+    dataloaders['val'] = DataLoader(val_set, batch_size=config.batch_size,
+                            shuffle=True, num_workers=config.num_workers)
 
     model = Net().to(args.device)
 
