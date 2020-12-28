@@ -43,13 +43,6 @@ class SurfaceDataset(Dataset):
 
         img_name = os.path.join(self.root_dir,
                                 self.dataframe.iloc[idx, 0])
-# <<<<<<< HEAD
-#         # image = cv2.imread(img_name).astype('float32')
-#         image = Image.open(img_name)
-#         direction = self.dataframe.iloc[idx, 1:].to_numpy()
-#         direction = direction.astype('float32')
-#         sample = {'image': image, 'direction': direction}
-# =======
         image = Image.open(img_name)
         surface = self.dataframe.iloc[idx, 1:].to_numpy()
         surface = surface.astype('float32')
