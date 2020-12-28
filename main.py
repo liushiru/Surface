@@ -45,7 +45,7 @@ def train_model(model, dataloaders, criterion, optimizer, tb_writer):
             # Iterate over data.
             for data in dataloaders[phase]:
                 inputs = data['image'].to(args.device)
-                labels = data['direction'].to(args.device)
+                labels = data['surface'].to(args.device)
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
