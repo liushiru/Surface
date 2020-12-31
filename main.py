@@ -58,6 +58,10 @@ def train_model(model, dataloaders, criterion, optimizer, tb_writer):
                     #   mode we calculate the loss by summing the final output and the auxiliary output
                     #   but in testing we only consider the final output.
                     outputs = model(inputs)
+                    if phase == 'val' and epoch == 10:
+                        print(outputs[0])
+                        print(labels[0])
+                        print('-------------')
                     loss = criterion(outputs, labels)
 
                     # backward + optimize only if in training phase
@@ -125,7 +129,7 @@ if __name__ == "__main__":
 
     model = Net().to(args.device)
 
-    criterion = torch.nn.MSELoss(reduction='sum')
-    optimizer = torch.optim.SGD(model.parameters(), lr=config.learning_rate)
+    criterion = torch.nn.MSELoss(reduction='mean')
+    optimizer = torch.optim.SGD(model.parameters(), lr=config.learning_rate, momentum=config.momentum)
 
     train_model(model, dataloaders, criterion, optimizer, tb_writer)
